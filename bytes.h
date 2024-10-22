@@ -2,7 +2,7 @@
 #define BYTES_H
 
 #include <string.h>
-#include "fila.h"
+#include "arvoreHuffman.h"
 
 /**
  * @brief Verifica se o i-ésimo bit de um byte está definido.

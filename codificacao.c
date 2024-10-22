@@ -1,15 +1,6 @@
 #include "fila.h"
 #include "codificacao.h"
 
-/*
-O código fornecido menciona várias funções que ainda precisam ser implementadas. Aqui está uma lista das funções que faltam:
-
-1. **`height(Node *arvore)`**: Esta função deve calcular a altura da árvore de Huffman.
-4. **`salvarArvorePreOrdem(Node *arvore, unsigned char *bytesArvore, int *k, int *tamArvore)`**: Esta função deve salvar a árvore de Huffman em pré-ordem.
-5. **`codificarArquivo(char **tabela, unsigned char *listaBytes, long int tamanho, long int *tamCodificado)`**: Esta função deve codificar o arquivo usando a tabela de códigos de Huffman.
-
-As funções mencionadas precisam ser implementadas para completar o processo de compactação do arquivo usando o algoritmo de Huffman.
-*/
 
 // Função para obter o tamanho do arquivo
 long int tamArquivo(FILE *f)
@@ -65,7 +56,7 @@ int compactarArquivo()
             enqueue(fila, j, frequencia[j]);
 
     // Falta ser implementada a função createHuffmanTree()
-    Node *arvore = createHuffmanTree(fila->head); // Cria a árvore de Huffman
+    Node *arvore = criarArvoreHuffman(fila->head); // Cria a árvore de Huffman
 
     // Falta ser implementada height()
     int colunas = height(arvore); // Calcula a altura da árvore
@@ -100,8 +91,9 @@ int compactarArquivo()
     // Libera a memória alocada
     free(listaBytes);
     free(arquivoCodificado);
-    freeQueue(fila);
-    freeTree(arvore);
+    free(fila);
+    free(arvore);
+    free(tabela);
 
     if (saida == 1)
         return 1;

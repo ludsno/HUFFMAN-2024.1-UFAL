@@ -10,6 +10,7 @@
 #define CODIFICACAO_H
 
 #include "fila.h"
+#include "bytes.h"
 #include <string.h>
 
 /**

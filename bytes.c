@@ -66,9 +66,9 @@ void criarMapa(char **tabela, Node *raiz, char *caminho, int colunas, int *nos)
 unsigned long long int tamCodificado(char **tabela, unsigned char *listaBytes, long int tamListaBytes)
 {
     unsigned long long int tam_codificado = 0;
-    for (int i = 0; i < tamListaBytes; i++)
+    for (int i = 0; i != tamListaBytes; i++)
         tam_codificado += strlen(tabela[listaBytes[i]]);
-    return tam_codificado;
+    return tam_codificado + 1;
 }
 
 // Codifica o arquivo usando a tabela de codificação

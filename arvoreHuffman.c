@@ -62,7 +62,7 @@ void salvarArvorePreOrdem(Node *arvore, unsigned char arr[], int *i, int *tamArv
     if (isEmptyList(arvore))
     {
         unsigned char c = *(unsigned char *)arvore->item;
-        if(arvore->left == NULL && arvore->right == NULL)
+        if (arvore->left == NULL && arvore->right == NULL)
         {
             if (c == '*' || c == '\\')
             {
@@ -74,7 +74,7 @@ void salvarArvorePreOrdem(Node *arvore, unsigned char arr[], int *i, int *tamArv
         }
         else
             arr[*i] = '*';
-        
+
         (*i)++;
         (*tamArvore)++;
         salvarArvorePreOrdem(arvore->left, arr, i, tamArvore);
@@ -82,7 +82,21 @@ void salvarArvorePreOrdem(Node *arvore, unsigned char arr[], int *i, int *tamArv
     }
 }
 
-Node* refazerArvore(unsigned char str[], int n, int *i, Node *arvore)
+void imprimirArvoreHuffmanPO(Node *arvore)
+{
+    if (!isEmptyList(arvore))
+    {
+        unsigned char c = *(unsigned char *)arvore->item;
+        if (arvore->left == NULL && arvore->right == NULL)
+            printf("%c ", c);
+        else
+            printf("* ");
+        imprimirArvoreHuffmanPO(arvore->left);
+        imprimirArvoreHuffmanPO(arvore->right);
+    }
+}
+
+Node *refazerArvore(unsigned char str[], int n, int *i, Node *arvore)
 {
     if (*i < n)
     {

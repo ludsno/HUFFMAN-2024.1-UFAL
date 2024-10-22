@@ -46,7 +46,7 @@ int height(Node *arvore);
  */
 void salvarArvorePreOrdem(Node *arvore, unsigned char array[], int *i, int *tamArvore);
 
-// void printHuffmanTreePreOrder(Node *huffmanTree);
+void imprimirArvoreHuffmanPO(Node *arvore);
 
 /**
  * @brief Reconstrói a árvore de Huffman a partir de uma string de percurso pré-ordem.

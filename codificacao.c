@@ -46,7 +46,8 @@ int compactarArquivo()
     while ((byte = fgetc(f)) != EOF)
     {
         frequencia[byte]++;
-        listaBytes[i++] = byte;
+        listaBytes[i] = byte;
+        i++;
     }
     listaBytes[i] = '\0';
 
@@ -57,6 +58,8 @@ int compactarArquivo()
 
     // Falta ser implementada a função createHuffmanTree()
     Node *arvore = criarArvoreHuffman(fila->head); // Cria a árvore de Huffman
+
+    imprimirArvoreHuffmanPO(arvore);
 
     // Falta ser implementada height()
     int colunas = height(arvore); // Calcula a altura da árvore

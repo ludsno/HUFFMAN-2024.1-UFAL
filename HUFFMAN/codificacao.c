@@ -1,15 +1,14 @@
 #include "fila.h"
 #include "codificacao.h"
 
-
 // Função para obter o tamanho do arquivo
 long int tamArquivo(FILE *f)
 {
     long int tam;
 
     fseek(f, 0, SEEK_END); // Move o ponteiro do arquivo para o final
-    tam = ftell(f); // Obtém a posição atual do ponteiro, que é o tamanho do arquivo
-    rewind(f); // Volta o ponteiro do arquivo para o início
+    tam = ftell(f);        // Obtém a posição atual do ponteiro, que é o tamanho do arquivo
+    rewind(f);             // Volta o ponteiro do arquivo para o início
 
     return tam;
 }
@@ -20,10 +19,10 @@ int compactarArquivo()
     Queue *fila = createQueue(); // Cria uma fila para armazenar os nós da árvore de Huffman
     FILE *f;
 
-    char **tabela; // Tabela de códigos de Huffman
+    char **tabela;           // Tabela de códigos de Huffman
     char *arquivoCodificado; // Arquivo codificado
 
-    printf("Insira o caminho do arquivo: ");
+    printf("Insira o caminho do arquivo que deseja compactar: ");
 
     char caminhoArquivo[1000];
     fgets(caminhoArquivo, sizeof(caminhoArquivo), stdin); // Lê o caminho do arquivo
@@ -36,9 +35,9 @@ int compactarArquivo()
         return 1;
     }
 
-    long int tam_arquivo = tamArquivo(f); // Obtém o tamanho do arquivo
+    long int tam_arquivo = tamArquivo(f);                                        // Obtém o tamanho do arquivo
     unsigned char *listaBytes = malloc(tam_arquivo * sizeof(unsigned char) + 1); // Aloca memória para armazenar os bytes do arquivo
-    int frequencia[256] = {0}; // Array para armazenar a frequência de cada byte
+    int frequencia[256] = {0};                                                   // Array para armazenar a frequência de cada byte
     int byte;
     long int i = 0;
 
@@ -67,7 +66,7 @@ int compactarArquivo()
     int tamArvore = 0;
     int k = 0;
 
-    tabela = alocarMapa(colunas); // Aloca memória para a tabela de códigos
+    tabela = alocarMapa(colunas);                 // Aloca memória para a tabela de códigos
     criarMapa(tabela, arvore, "", colunas, &nos); // Cria a tabela de códigos
     unsigned char bytesArvore[2 * nos];
     salvarArvorePreOrdem(arvore, bytesArvore, &k, &tamArvore); // Salva a árvore em pré-ordem
@@ -80,8 +79,11 @@ int compactarArquivo()
     int j = strlen(caminhoArquivo) - 1;
     for (i = j; i >= 0; i--)
     {
-        if (caminhoArquivo[i] == '\\')
-            nomeArquivo[j--] = caminhoArquivo[i];
+        if (caminhoArquivo[i] != '\\')
+        {
+            nomeArquivo[j] = caminhoArquivo[i];
+            j--;
+        }
         else if (caminhoArquivo[i] == '\\')
             break;
     }
@@ -118,7 +120,7 @@ int descompactarArquivo()
     // Índice
     int h = 0;
 
-    printf("Insira o caminho do arquivo: ");
+    printf("Insira o caminho do arquivo que deseja descompactar: ");
     fgets(caminhoArquivo, sizeof(caminhoArquivo), stdin); // Lê o caminho do arquivo
     caminhoArquivo[strcspn(caminhoArquivo, "\n")] = '\0'; // Remove o caractere de nova linha
 
@@ -144,7 +146,7 @@ int descompactarArquivo()
     for (int i = 12; i >= 0; i--)
     {
         if (isHeaderSet(cabecalho, i))
-            tamArvore = setHeader(tamArvore, h);
+            tamArvore = setHeader(tamArvore, i);
     }
 
     unsigned char arvore[tamArvore];
@@ -152,9 +154,18 @@ int descompactarArquivo()
     for (int i = 0; i < tamArvore; i++)
         fread(&arvore[i], sizeof(unsigned char), 1, f); // Lê a árvore do arquivo
 
+    printf("\n");
+
+    for (int k = 0; k < tamArvore; k++)
+        printf("%c", arvore[k]);
+
+    printf("\n");
+
     // Falta ser implementada a função refazerArvore()
     Node *arvoreHuffman = refazerArvore(arvore, tamArvore, &h, NULL); // Reconstrói a árvore de Huffman
     Node *aux = arvoreHuffman;
+
+    imprimirArvoreHuffmanPO(arvoreHuffman);
 
     for (int i = strlen(caminhoArquivo) - 1; i >= 0; i--)
     {

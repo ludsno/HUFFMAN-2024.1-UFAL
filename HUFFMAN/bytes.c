@@ -31,9 +31,10 @@ unsigned short setHeader(unsigned short c, int i)
 // Aloca uma tabela de 256 ponteiros para strings, cada string com tamanho colunas
 char **alocarMapa(int colunas)
 {
-    char **tabela = (char **)malloc(256 * sizeof(char *));
+    char **tabela;
+    tabela = malloc(256 * sizeof(char *));
     for (int i = 0; i < 256; i++)
-        tabela[i] = (char *)malloc(colunas * sizeof(char));
+        tabela[i] = calloc(colunas, sizeof(char));
     return tabela;
 }
 
@@ -44,7 +45,7 @@ void criarMapa(char **tabela, Node *raiz, char *caminho, int colunas, int *nos)
 
     (*nos)++;
 
-    if (raiz->left == NULL && raiz->right == NULL)
+    if (isEmptyList(raiz->left) && isEmptyList(raiz->right))
     {
         unsigned char c = *(unsigned char *)raiz->item;
         strcpy(tabela[c], caminho);
@@ -90,7 +91,7 @@ char *codificarArquivo(char **tabela, unsigned char *listaBytes, long int tamLis
 }
 
 // Salva o arquivo compactado no formato .huff
-int salvarCompactado(long int tamCodificado, unsigned char bytesArvore[], char *arquivoCodificado, long int tamArvore, char nomeArquivo[])
+int salvarCompactado(long int tamCodificado, unsigned char bytesArvore[], char *arquivoCodificado, int tamArvore, char nomeArquivo[])
 {
     char str[1000];
     strcpy(str, nomeArquivo);
@@ -118,7 +119,7 @@ int salvarCompactado(long int tamCodificado, unsigned char bytesArvore[], char *
     // Configura os bits do cabeçalho para o lixo
     for (int i = 15; i >= 13; i--)
     {
-        if(isHeaderSet(lixo, i))
+        if(isHeaderSet(lixo, j))
             cabecalho = setHeader(cabecalho, i);
         j--;
     }

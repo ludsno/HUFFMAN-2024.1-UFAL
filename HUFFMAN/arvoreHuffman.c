@@ -68,7 +68,7 @@ void salvarArvorePreOrdem(Node *arvore, unsigned char arr[], int *i, int *tamArv
             {
                 arr[*i] = '\\';
                 (*i)++;
-                tamArvore++;
+                (*tamArvore)++;
             }
             arr[*i] = c;
         }

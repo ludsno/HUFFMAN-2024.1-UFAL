@@ -90,6 +90,6 @@ char *codificarArquivo(char **tabela, unsigned char *listaBytes, long int tamLis
  * @param nomeArquivo O nome do arquivo de saída.
  * @return int 1 se bem-sucedido, 0 caso contrário.
  */
-int salvarCompactado(long int tamCodificado, unsigned char bytesArvore[], char *arquivoCodificado, long int tamArvore, char nomeArquivo[]);
+int salvarCompactado(long int tamCodificado, unsigned char bytesArvore[], char *arquivoCodificado, int tamArvore, char nomeArquivo[]);
 
 #endif // BYTES_H

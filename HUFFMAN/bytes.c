@@ -97,7 +97,7 @@ int salvarCompactado(long int tamCodificado, unsigned char bytesArvore[], char *
     strcpy(str, nomeArquivo);
     strcat(str, ".huff");
 
-    FILE *f = fopen(nomeArquivo, "wb");
+    FILE *f = fopen(str, "wb");
     if (f == NULL)
     {
         printf("Erro ao criar o arquivo compactado.\n");

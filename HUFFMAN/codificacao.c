@@ -60,7 +60,6 @@ int compactarArquivo()
 
     imprimirArvoreHuffmanPO(arvore);
 
-    // Falta ser implementada height()
     int colunas = height(arvore); // Calcula a altura da árvore
     int nos = 0;
     int tamArvore = 0;
@@ -161,7 +160,6 @@ int descompactarArquivo()
 
     printf("\n");
 
-    // Falta ser implementada a função refazerArvore()
     Node *arvoreHuffman = refazerArvore(arvore, tamArvore, &h, NULL); // Reconstrói a árvore de Huffman
     Node *aux = arvoreHuffman;
 
@@ -192,7 +190,7 @@ int descompactarArquivo()
     int nBitsLidos = 0;
 
     // Lê o arquivo compactado e escreve o conteúdo descompactado no novo arquivo
-    while (fread(&byte, sizeof(unsigned char), 1, f))
+    while (fread(&byte, sizeof(unsigned char), 1, f) != EOF)
     {
         long int posicaoArquivo = ftell(f);
 
@@ -210,7 +208,7 @@ int descompactarArquivo()
                 unsigned char *item = (unsigned char *)malloc(sizeof(unsigned char));
                 item = (unsigned char *)aux->item;
                 unsigned char c = *item;
-                fwrite(&c, sizeof(unsigned char), 1, arquivoDescompactado);
+                fwrite(item, sizeof(unsigned char), 1, arquivoDescompactado);
                 aux = arvoreHuffman;
             }
 

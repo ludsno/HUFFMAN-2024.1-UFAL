@@ -59,7 +59,7 @@ int height(Node *arvore)
 
 void salvarArvorePreOrdem(Node *arvore, unsigned char arr[], int *i, int *tamArvore)
 {
-    if (isEmptyList(arvore))
+    if (!isEmptyList(arvore))
     {
         unsigned char c = *(unsigned char *)arvore->item;
         if (arvore->left == NULL && arvore->right == NULL)

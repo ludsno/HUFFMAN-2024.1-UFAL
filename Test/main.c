@@ -8,14 +8,15 @@ int main()
     char opcao[100];
     while (1)
     {
+
         printf("\n");
         printf("==============================================\n");
         printf("Por favor, digite abaixo o que deseja realizar\n");
         printf("==============================================\n");
         printf("\n");
-        printf("--> Comprimir arquivo\n");
-        printf("--> Descomprimir arquivo\n");
-        printf("--> Fechar o programa\n");
+        printf("[C]--> Comprimir arquivo\n");
+        printf("[D]--> Descomprimir arquivo\n");
+        printf("[F]--> Fechar o programa\n");
         printf("\n");
         printf("==============================================\n");
         printf("\n>>> ");
@@ -34,9 +35,7 @@ int main()
                 getchar();
 
                 if (compactarArquivo() == 1)
-                    return 1;
-
-                printf("\n===============================================================\n");
+                    printf("\n===============================================================\n");
                 printf("O arquivo foi compactado. Deseja continuar usando o programa?\n");
                 printf("===============================================================\n");
                 printf("\nDigite SIM para prosseguir");

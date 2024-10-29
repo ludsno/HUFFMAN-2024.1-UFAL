@@ -60,7 +60,7 @@ int compactarArquivo()
 
     imprimirArvoreHuffmanPO(arvore);
 
-    int colunas = height(arvore); // Calcula a altura da árvore
+    int colunas = height(arvore) + 1; // Calcula a altura da árvore
     int nos = 0;
     int tamArvore = 0;
     int k = 0;

@@ -1,97 +1,92 @@
-#include "fila.h"
-#include "codificacao.h"
-#include "bytes.h"
-#include "arvoreHuffman.h"
-
-void imprimirMenu()
+// Função para obter o tamanho do arquivo
+long int tamArquivo(FILE *f)
 {
-  printf("\n");
-  printf("\n");
-  printf("        _______________                               \n");
-  printf("       |         ___   ____           _____          \n");
-  printf("  ||   | ||   | ||    ||    |\\    /| ||   | |\\  |  \n");
-  printf("  ||---| ||   | |--   |--   | \\  / | |----| | \\ |  \n");
-  printf("  ||   | ||___| ||    ||    |  \\/  | ||   | |  \\|  \n");
-  printf("                                ____________|       \n");
-
-  printf("\n");
-  printf("\n");
-  printf("==============================================\n");
-  printf("Por favor, digite abaixo o que deseja realizar\n");
-  printf("==============================================\n");
-  printf("\n");
-  printf("    [C]--> Comprimir arquivo\n");
-  printf("    [D]--> Descomprimir arquivo\n");
-  printf("    [F]--> Fechar o programa\n");
-  printf("\n");
-  printf("==============================================\n");
-  printf("\n>>> ");
-}
-void imprimirConfirmacao()
-{
-  printf("\n===============================================================\n");
-  printf("Operação realizada. Deseja continuar usando o programa?\n");
-  printf("===============================================================\n");
-  printf("\nDigite SIM para prosseguir");
-  printf("\nDigite qualquer outra entrada para sair\n");
-  printf("\n>>> ");
+  fseek(f, 0, SEEK_END);
+  long int tam = ftell(f);
+  rewind(f);
+  return tam;
 }
 
-int main()
+// Função para obter caminho do arquivo com entrada do usuário
+void obterCaminho(char *caminho, const char *mensagem)
 {
-  char opcao[100];
-  while (1)
+  printf("%s", mensagem);
+  fgets(caminho, 1000, stdin);
+  caminho[strcspn(caminho, "\n")] = '\0';
+}
+
+// Função para ler cabeçalho e definir lixo e tamanho da árvore
+void lerCabecalho(FILE *f, unsigned short *lixo, unsigned short *tamArvore)
+{
+  unsigned short cabecalho;
+  fread(&cabecalho, sizeof(unsigned short), 1, f);
+
+  *lixo = (cabecalho >> 13) & 0x7; // 3 bits mais significativos para lixo
+  *tamArvore = cabecalho & 0x1FFF; // 13 bits para tamanho da árvore
+}
+
+// Função para reconstruir e descompactar o arquivo
+int descompactarArquivo()
+{
+  char caminho[1000];
+  obterCaminho(caminho, "Insira o caminho do arquivo que deseja descompactar: ");
+
+  FILE *f = fopen(caminho, "rb");
+  if (!f)
   {
-    imprimirMenu();
-    int flag = 1;
-    do
-    {
-      scanf(" %[^\n]", opcao);
+    printf("Erro ao abrir o arquivo.\n");
+    return 1;
+  }
+  long int tam_arquivo = tamArquivo(f);
 
-      if (opcao[0] == 'F' || opcao[0] == 'f')
-        break;
-      else if (opcao[0] == 'C' || opcao[0] == 'c')
-      {
-        flag = 1;
-        getchar();
+  unsigned short lixo, tamArvore;
+  lerCabecalho(f, &lixo, &tamArvore);
 
-        if (compactarArquivo() == 1)
-          imprimirConfirmacao();
+  unsigned char arvoreBytes[tamArvore];
+  fread(arvoreBytes, sizeof(unsigned char), tamArvore, f);
 
-        if (opcao[0] != 'S' && opcao[0] != 's')
-        {
-          opcao[0] = 'F';
-          break;
-        }
-      }
-      else if (opcao[0] == 'D' || opcao[0] == 'd')
-      {
-        flag = 1;
-        getchar();
-
-        if (descompactarArquivo() == 1)
-          return 1;
-
-        imprimirConfirmacao();
-        scanf(" %s", opcao);
-
-        if (opcao[0] != 'S' && opcao[0] != 's')
-        {
-          opcao[0] = 'F';
-          break;
-        }
-      }
-      else
-      {
-        flag = 0;
-        printf("\nPor favor, digite uma entrada valida\n");
-        printf("\n>>> ");
-      }
-    } while (flag == 0);
-
-    if (opcao[0] == 'F' || opcao[0] == 'f')
-      break;
+  Node *arvoreHuffman = refazerArvore(arvoreBytes, tamArvore, NULL);
+  if (!arvoreHuffman)
+  {
+    fclose(f);
+    return 1;
   }
 
+  // Define o nome do arquivo de saída
+  char nomeSaida[1000] = "descompactado_";
+  strcat(nomeSaida, caminho);
+  FILE *saida = fopen(nomeSaida, "wb");
+  if (!saida)
+  {
+    printf("Erro ao criar o arquivo descompactado.\n");
+    fclose(f);
+    return 1;
+  }
+
+  unsigned char byte;
+  Node *aux = arvoreHuffman;
+  int nBitsLidos = 0;
+
+  while (fread(&byte, sizeof(unsigned char), 1, f) == 1)
+  {
+    for (int i = 7; i >= 0; i--)
+    {
+      aux = isBitSet(byte, i) ? aux->right : aux->left;
+      nBitsLidos++;
+
+      // Quando encontra uma folha, escreve o caractere no arquivo descompactado
+      if (!aux->left && !aux->right)
+      {
+        fwrite(&aux->item, sizeof(unsigned char), 1, saida);
+        aux = arvoreHuffman;
+      }
+
+      if (ftell(f) == tam_arquivo && (nBitsLidos + lixo) % 8 == 0)
+        break;
+    }
+  }
+
+  fclose(f);
+  fclose(saida);
   return 0;
 }

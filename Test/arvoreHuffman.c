@@ -81,7 +81,7 @@ void salvarArvorePreOrdem(Node *arvore, unsigned char arr[], int *i, int *tamArv
         salvarArvorePreOrdem(arvore->right, arr, i, tamArvore);
     }
 }
-
+/*
 void imprimirArvoreHuffmanPO(Node *arvore)
 {
     if (!isEmptyList(arvore))
@@ -95,7 +95,7 @@ void imprimirArvoreHuffmanPO(Node *arvore)
         imprimirArvoreHuffmanPO(arvore->right);
     }
 }
-
+*/
 Node *refazerArvore(unsigned char str[], int n, int *i, Node *arvore)
 {
     if (*i < n)

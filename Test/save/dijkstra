@@ -1,0 +1,128 @@
+#include <limits.h>
+#include <stdbool.h>
+#include <stdlib.h>
+
+#define MAX_VERTICES 1000
+
+typedef struct {
+    int v;
+    int priority;
+} PQNode;
+
+typedef struct {
+    PQNode *nodes;
+    int size;
+} MinHeap;
+
+MinHeap pq;
+
+// Função para inicializar a fila de prioridade
+void PQinit(int maxV) {
+    pq.nodes = (PQNode *)malloc(maxV * sizeof(PQNode));
+    pq.size = 0;
+}
+
+// Função para verificar se a fila está vazia
+bool PQempty() {
+    return pq.size == 0;
+}
+
+// Função para trocar dois nós do heap
+void swap(int i, int j) {
+    PQNode temp = pq.nodes[i];
+    pq.nodes[i] = pq.nodes[j];
+    pq.nodes[j] = temp;
+}
+
+// Função para empurrar o nó para cima no heap
+void heapifyUp(int idx) {
+    while (idx > 0 && pq.nodes[idx].priority < pq.nodes[(idx - 1) / 2].priority) {
+        swap(idx, (idx - 1) / 2);
+        idx = (idx - 1) / 2;
+    }
+}
+
+// Função para inserir um vértice na fila de prioridade
+void PQinsert(int v, int *dist) {
+    pq.nodes[pq.size].v = v;
+    pq.nodes[pq.size].priority = dist[v];
+    heapifyUp(pq.size);
+    pq.size++;
+}
+
+// Função para empurrar o nó para baixo no heap
+void heapifyDown(int idx) {
+    int smallest = idx;
+    int left = 2 * idx + 1;
+    int right = 2 * idx + 2;
+
+    if (left < pq.size && pq.nodes[left].priority < pq.nodes[smallest].priority) {
+        smallest = left;
+    }
+    if (right < pq.size && pq.nodes[right].priority < pq.nodes[smallest].priority) {
+        smallest = right;
+    }
+    if (smallest != idx) {
+        swap(idx, smallest);
+        heapifyDown(smallest);
+    }
+}
+
+// Função para remover o vértice com menor distância da fila
+int PQdelmin(int *dist) {
+    int minVertex = pq.nodes[0].v;
+    pq.nodes[0] = pq.nodes[pq.size - 1];
+    pq.size--;
+    heapifyDown(0);
+    return minVertex;
+}
+
+// Função para atualizar a prioridade de um vértice no heap
+void PQdec(int v, int *dist) {
+    for (int i = 0; i < pq.size; i++) {
+        if (pq.nodes[i].v == v) {
+            pq.nodes[i].priority = dist[v];
+            heapifyUp(i);
+            break;
+        }
+    }
+}
+
+// Função para liberar a memória alocada para a fila
+void PQfree() {
+    free(pq.nodes);
+    pq.size = 0;
+}
+
+// Implementação da função GRAPHcptD2 com a fila de prioridade
+void GRAPHcptD2(Graph G, vertex s, vertex *pa, int *dist) {
+    bool mature[MAX_VERTICES];
+    for (vertex v = 0; v < G->V; ++v) {
+        pa[v] = -1;
+        mature[v] = false;
+        dist[v] = INT_MAX;
+    }
+    pa[s] = s;
+    dist[s] = 0;
+    PQinit(G->V);
+    for (vertex v = 0; v < G->V; ++v) {
+        PQinsert(v, dist);
+    }
+
+    while (!PQempty()) {
+        vertex y = PQdelmin(dist);
+        if (dist[y] == INT_MAX) break;
+
+        // Atualização de dist[] e pa[]
+        for (link a = G->adj[y]; a != NULL; a = a->next) {
+            if (mature[a->w]) continue;
+            if (dist[y] + a->c < dist[a->w]) {
+                dist[a->w] = dist[y] + a->c;
+                PQdec(a->w, dist);
+                pa[a->w] = y;
+            }
+        }
+        mature[y] = true;
+    }
+    PQfree();
+}

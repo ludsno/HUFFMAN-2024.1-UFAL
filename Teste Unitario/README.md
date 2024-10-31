@@ -1,0 +1,1 @@
+gcc main.c teste_arvore_huffman.c teste_fila.c teste_bytes.c ../HUFFMAN/fila.c ../HUFFMAN/arvoreHuffman.c ../HUFFMAN/bytes.c -lcunit

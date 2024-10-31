@@ -52,4 +52,55 @@ int compactarArquivo();
  */
 int descompactarArquivo();
 
-#endif
+/**
+ * @brief Obtém o caminho do arquivo a ser compactado.
+ *
+ * Esta função solicita ao usuário que insira o caminho do arquivo que deseja compactar.
+ *
+ * @param caminhoArquivo Ponteiro para armazenar o caminho do arquivo.
+ */
+void obterCaminhoArquivo(char *caminhoArquivo);
+
+/**
+ * @brief Abre o arquivo e verifica erros.
+ *
+ * Esta função abre o arquivo no caminho especificado e verifica se houve erros ao abrir.
+ *
+ * @param caminhoArquivo Caminho do arquivo a ser aberto.
+ * @return Ponteiro para o arquivo aberto, ou NULL em caso de erro.
+ */
+FILE *abrirArquivo(const char *caminhoArquivo);
+
+/**
+ * @brief Calcula a frequência dos bytes no arquivo.
+ *
+ * Esta função lê o arquivo e calcula a frequência de cada byte presente nele.
+ *
+ * @param f Ponteiro para o arquivo.
+ * @param tam_arquivo Tamanho do arquivo.
+ * @param listaBytes Ponteiro para armazenar os bytes lidos.
+ * @param frequencia Array para armazenar a frequência de cada byte.
+ */
+void calcularFrequencia(FILE *f, long int tam_arquivo, unsigned char *listaBytes, int *frequencia);
+
+/**
+ * @brief Enfileira os bytes com suas respectivas frequências.
+ *
+ * Esta função enfileira os bytes e suas frequências em uma fila.
+ *
+ * @param fila Ponteiro para a fila.
+ * @param frequencia Array contendo a frequência de cada byte.
+ */
+void enfileirarBytes(Queue *fila, int *frequencia);
+
+/**
+ * @brief Cria o nome do arquivo compactado.
+ *
+ * Esta função cria o nome do arquivo compactado a partir do caminho original.
+ *
+ * @param caminhoArquivo Caminho do arquivo original.
+ * @param nomeArquivo Ponteiro para armazenar o nome do arquivo compactado.
+ */
+void criarNomeArquivoCompactado(const char *caminhoArquivo, char *nomeArquivo);
+
+#endif // CODIFICACAO_H

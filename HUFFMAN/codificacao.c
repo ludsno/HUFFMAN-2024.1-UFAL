@@ -14,34 +14,31 @@ long int tamArquivo(FILE *f)
 }
 
 // Função para compactar o arquivo
-int compactarArquivo()
+
+// Função para obter o caminho do arquivo a ser compactado
+void obterCaminhoArquivo(char *caminhoArquivo)
 {
-    Queue *fila = createQueue(); // Cria uma fila para armazenar os nós da árvore de Huffman
-    FILE *f;
-
-    char **tabela;           // Tabela de códigos de Huffman
-    char *arquivoCodificado; // Arquivo codificado
-
     printf("Insira o caminho do arquivo que deseja compactar: ");
-
-    char caminhoArquivo[1000];
-    fgets(caminhoArquivo, sizeof(caminhoArquivo), stdin); // Lê o caminho do arquivo
+    fgets(caminhoArquivo, 1000, stdin);
     caminhoArquivo[strcspn(caminhoArquivo, "\n")] = '\0'; // Remove o caractere de nova linha
+}
 
-    f = fopen(caminhoArquivo, "rb"); // Abre o arquivo em modo binário
+// Função para abrir o arquivo e verificar erros
+FILE *abrirArquivo(const char *caminhoArquivo)
+{
+    FILE *f = fopen(caminhoArquivo, "rb");
     if (f == NULL)
     {
         printf("Erro ao abrir o arquivo.\n");
-        return 1;
     }
+    return f;
+}
 
-    long int tam_arquivo = tamArquivo(f);                                        // Obtém o tamanho do arquivo
-    unsigned char *listaBytes = malloc(tam_arquivo * sizeof(unsigned char) + 1); // Aloca memória para armazenar os bytes do arquivo
-    int frequencia[256] = {0};                                                   // Array para armazenar a frequência de cada byte
+// Função para calcular a frequência dos bytes no arquivo
+void calcularFrequencia(FILE *f, long int tam_arquivo, unsigned char *listaBytes, int *frequencia)
+{
     int byte;
     long int i = 0;
-
-    // Lê o arquivo byte a byte e calcula a frequência de cada byte
     while ((byte = fgetc(f)) != EOF)
     {
         frequencia[byte]++;
@@ -49,50 +46,91 @@ int compactarArquivo()
         i++;
     }
     listaBytes[i] = '\0';
+}
 
-    // Enfileira os bytes com suas respectivas frequências
+// Função para enfileirar os bytes com suas respectivas frequências
+void enfileirarBytes(Queue *fila, int *frequencia)
+{
     for (int j = 0; j < 256; j++)
+    {
         if (frequencia[j] != 0)
+        {
             enqueue(fila, j, frequencia[j]);
+        }
+    }
+}
 
-    // Falta ser implementada a função createHuffmanTree()
-    Node *arvore = criarArvoreHuffman(fila->head); // Cria a árvore de Huffman
+// Função para criar o nome do arquivo compactado
+void criarNomeArquivoCompactado(const char *caminhoArquivo, char *nomeArquivo)
+{
+    int j = strlen(caminhoArquivo) - 1;
+    int k = 0;
+    for (int i = j; i >= 0; i--)
+    {
+        if (caminhoArquivo[i] != '\\')
+        {
+            nomeArquivo[k] = caminhoArquivo[i];
+            k++;
+        }
+        else if (caminhoArquivo[i] == '\\')
+        {
+            break;
+        }
+    }
+    nomeArquivo[k] = '\0';
+    // Inverte a string para obter o nome correto
+    int len = strlen(nomeArquivo);
+    for (int i = 0; i < len / 2; i++)
+    {
+        char temp = nomeArquivo[i];
+        nomeArquivo[i] = nomeArquivo[len - i - 1];
+        nomeArquivo[len - i - 1] = temp;
+    }
+}
 
+// Função principal para compactar o arquivo
+int compactarArquivo()
+{
+    Queue *fila = createQueue();
+    FILE *f;
+    char **tabela;
+    char *arquivoCodificado;
+    char caminhoArquivo[1000];
+
+    obterCaminhoArquivo(caminhoArquivo);
+    f = abrirArquivo(caminhoArquivo);
+    if (f == NULL)
+        return 1;
+
+    long int tam_arquivo = tamArquivo(f);
+    unsigned char *listaBytes = malloc(tam_arquivo * sizeof(unsigned char) + 1);
+    int frequencia[256] = {0};
+
+    calcularFrequencia(f, tam_arquivo, listaBytes, frequencia);
+    enfileirarBytes(fila, frequencia);
+
+    Node *arvore = criarArvoreHuffman(fila->head);
     imprimirArvoreHuffmanPO(arvore);
 
-    int colunas = height(arvore) + 1; // Calcula a altura da árvore
+    int colunas = height(arvore) + 1;
     int nos = 0;
     int tamArvore = 0;
     int k = 0;
 
-    tabela = alocarMapa(colunas);                 // Aloca memória para a tabela de códigos
-    criarMapa(tabela, arvore, "", colunas, &nos); // Cria a tabela de códigos
+    tabela = alocarMapa(colunas);
+    criarMapa(tabela, arvore, "", colunas, &nos);
+
     unsigned char bytesArvore[2 * nos];
-    salvarArvorePreOrdem(arvore, bytesArvore, &k, &tamArvore); // Salva a árvore em pré-ordem
+    salvarArvorePreOrdem(arvore, bytesArvore, &k, &tamArvore);
 
     long int tamCodificado;
-    arquivoCodificado = codificarArquivo(tabela, listaBytes, i, &tamCodificado); // Codifica o arquivo
+    arquivoCodificado = codificarArquivo(tabela, listaBytes, tam_arquivo, &tamCodificado);
 
     char nomeArquivo[1000];
+    criarNomeArquivoCompactado(caminhoArquivo, nomeArquivo);
 
-    int j = strlen(caminhoArquivo) - 1;
-    for (i = j; i >= 0; i--)
-    {
-        if (caminhoArquivo[i] != '\\')
-        {
-            nomeArquivo[j] = caminhoArquivo[i];
-            j--;
-        }
-        else if (caminhoArquivo[i] == '\\')
-            break;
-    }
-
-    nomeArquivo[strlen(caminhoArquivo)] = '\0';
-
-    // Salva o arquivo compactado
     int saida = salvarCompactado(tamCodificado, bytesArvore, arquivoCodificado, tamArvore, nomeArquivo);
 
-    // Libera a memória alocada
     free(listaBytes);
     free(arquivoCodificado);
     free(fila);

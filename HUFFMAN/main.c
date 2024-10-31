@@ -3,25 +3,47 @@
 #include "bytes.h"
 #include "arvoreHuffman.h"
 
+void imprimirMenu()
+{
+    printf("\n");
+    printf("\n");
+    printf("        _______________                               \n");
+    printf("       |         ___   ____           _____          \n");
+    printf("  ||   | ||   | ||    ||    |\\    /| ||   | |\\  |  \n");
+    printf("  ||---| ||   | |--   |--   ||\\  / | |----| | \\ |  \n");
+    printf("  ||   | ||___| ||    ||    || \\/  | ||   | |  \\|  \n");
+    printf("                                ____________|       \n");
+
+    printf("\n");
+    printf("\n");
+    printf("==================================================\n");
+    printf("  Por favor, digite abaixo o que deseja realizar\n");
+    printf("==================================================\n");
+    printf("\n");
+    printf("    [C]--> Comprimir arquivo\n");
+    printf("    [D]--> Descomprimir arquivo\n");
+    printf("    [F]--> Fechar o programa\n");
+    printf("\n");
+    printf("==================================================\n");
+    printf("\n>>> ");
+}
+void imprimirConfirmacao()
+{
+    printf("\n===============================================================\n");
+    printf("  Operacao realizada. Deseja continuar usando o programa?\n");
+    printf("===============================================================\n");
+    printf("\n  Digite SIM para prosseguir");
+    printf("\n  Digite qualquer outra entrada para sair\n");
+    printf("\n>>> ");
+}
+
 int main()
 {
     char opcao[100];
     while (1)
     {
-        printf("\n");
-        printf("==============================================\n");
-        printf("Por favor, digite abaixo o que deseja realizar\n");
-        printf("==============================================\n");
-        printf("\n");
-        printf("--> Comprimir arquivo\n");
-        printf("--> Descomprimir arquivo\n");
-        printf("--> Fechar o programa\n");
-        printf("\n");
-        printf("==============================================\n");
-        printf("\n>>> ");
-
+        imprimirMenu();
         int flag = 1;
-
         do
         {
             scanf(" %[^\n]", opcao);
@@ -32,21 +54,14 @@ int main()
             {
                 flag = 1;
                 getchar();
-
+                // C:\Users\cliente\Desktop
                 if (compactarArquivo() == 1)
-                    return 1;
+                    imprimirConfirmacao();
 
-                printf("\n===============================================================\n");
-                printf("O arquivo foi compactado. Deseja continuar usando o programa?\n");
-                printf("===============================================================\n");
-                printf("\nDigite SIM para prosseguir");
-                printf("\nDigite qualquer outra entrada para sair\n");
-                printf("\n>>> ");
                 scanf(" %s", opcao);
 
                 if (opcao[0] != 'S' && opcao[0] != 's')
                 {
-                    opcao[0] = 'F';
                     break;
                 }
             }
@@ -58,12 +73,7 @@ int main()
                 if (descompactarArquivo() == 1)
                     return 1;
 
-                printf("\n===============================================================\n");
-                printf("O arquivo foi descompactado. Deseja continuar usando o programa?\n");
-                printf("===============================================================\n");
-                printf("\nDigite SIM para prosseguir");
-                printf("\nDigite qualquer outra entrada para sair\n");
-                printf("\n>>> ");
+                imprimirConfirmacao();
                 scanf(" %s", opcao);
 
                 if (opcao[0] != 'S' && opcao[0] != 's')

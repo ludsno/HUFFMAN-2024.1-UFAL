@@ -18,11 +18,11 @@ void enqueue(Queue *fila, unsigned char item, int frequency)
     Node *newNode = (Node *)malloc(sizeof(Node));
     newNode->item = malloc(sizeof(unsigned char));
     newNode->frequency = malloc(sizeof(int));
-    
+
     // Atribui os valores do item e da frequência ao novo nó
     *(unsigned char *)newNode->item = item;
     *(int *)newNode->frequency = frequency;
-    
+
     // Inicializa os ponteiros left e right do novo nó como NULL
     newNode->left = NULL;
     newNode->right = NULL;

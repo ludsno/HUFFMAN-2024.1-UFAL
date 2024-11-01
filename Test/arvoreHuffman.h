@@ -21,6 +21,25 @@ int isEmptyList(Node *head);
 int max(int a, int b);
 
 /**
+ * @brief Cria um novo nó da árvore de Huffman.
+ *
+ * @param frequency Frequência do nó.
+ * @param left Ponteiro para o nó filho à esquerda.
+ * @param right Ponteiro para o nó filho à direita.
+ * @param item Item armazenado no nó.
+ * @return Node* Ponteiro para o novo nó criado.
+ */
+Node *criarNovoNo(int frequency, Node *left, Node *right, unsigned char item);
+
+/**
+ * @brief Insere um nó na fila de prioridade (lista ligada ordenada).
+ *
+ * @param fila Ponteiro para o início da fila.
+ * @param newNode Ponteiro para o novo nó a ser inserido.
+ */
+void inserirFila(Node **fila, Node *newNode);
+
+/**
  * @brief Cria uma árvore de Huffman a partir de uma lista de nós.
  *
  * @param fila Ponteiro para o início da lista de nós.
@@ -46,7 +65,20 @@ int height(Node *arvore);
  */
 void salvarArvorePreOrdem(Node *arvore, unsigned char array[], int *i, int *tamArvore);
 
-// void imprimirArvoreHuffmanPO(Node *arvore);
+/**
+ * @brief Imprime a árvore de Huffman em ordem pré-fixada (pre-order).
+ *
+ * @param arvore Ponteiro para a raiz da árvore de Huffman.
+ */
+void imprimirArvoreHuffmanPO(Node *arvore);
+
+/**
+ * @brief Cria uma folha da árvore de Huffman.
+ *
+ * @param item Item armazenado na folha.
+ * @return Node* Ponteiro para a folha criada.
+ */
+Node *criarFolha(unsigned char item);
 
 /**
  * @brief Reconstrói a árvore de Huffman a partir de uma string de percurso pré-ordem.

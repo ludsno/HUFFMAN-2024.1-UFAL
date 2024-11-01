@@ -32,6 +32,10 @@ unsigned short lerCabecalho(FILE *f, unsigned short *lixo, unsigned short *tamAr
   return cabecalho;
 }
 
+/*
+A função lerArvore é projetada para ler um conjunto de dados binários que representam uma árvore
+e armazená-los no array arvore. Ela usa fread, que lê blocos de dados de tamanho unsigned char (1 byte)
+diretamente do arquivo f e os armazena em arvore.O número de bytes a serem lidos é definido pelo parâmetro tamArvore.*/
 void lerArvore(FILE *f, unsigned char *arvore, unsigned short tamArvore)
 {
   fread(arvore, sizeof(unsigned char), tamArvore, f);

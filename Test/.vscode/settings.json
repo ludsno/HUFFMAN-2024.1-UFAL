@@ -1,5 +1,7 @@
 {
   "files.associations": {
-    "descomprimir.h": "c"
-  }
+    "descomprimir.h": "c",
+    "comprimir.h": "c"
+  },
+  "C_Cpp.errorSquiggles": "enabled"
 }

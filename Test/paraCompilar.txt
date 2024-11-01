@@ -1,0 +1,7 @@
+Para compilar, use:
+
+gcc -o huffman.exe maintteste.c arvoreHuffman.c descomprimir.c bytes.c fila.c comprimir.c
+<<<<<<< HEAD
+
+=======
+>>>>>>> df717ca60ed1d4c9a70c66b2734b50e06576fc4f

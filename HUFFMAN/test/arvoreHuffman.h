@@ -44,7 +44,7 @@ int height(Node *arvore);
  * @param i Ponteiro para o índice atual no array.
  * @param tamArvore Ponteiro para o tamanho da árvore.
  */
-void salvarArvorePreOrdem(Node *arvore, unsigned char array[], int *i, int *tamArvore);
+void salvarArvorePreOrdem(Node *arvore, unsigned char array[], int *tamArvore);
 
 void imprimirArvoreHuffmanPO(Node *arvore);
 

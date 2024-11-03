@@ -71,9 +71,7 @@ void criarNomeArquivo(const char *caminhoArquivo, char *nomeArquivo)
             k++;
         }
         else if (caminhoArquivo[i] == '\\')
-        {
             break;
-        }
     }
     nomeArquivo[k] = '\0';
     // Inverte a string para obter o nome correto
@@ -113,13 +111,12 @@ int compactarArquivo()
     int colunas = height(arvore) + 1;
     int nos = 0;
     int tamArvore = 0;
-    int k = 0;
 
     tabela = alocarMapa(colunas);
     criarMapa(tabela, arvore, "", colunas, &nos);
 
     unsigned char bytesArvore[nos];
-    salvarArvorePreOrdem(arvore, bytesArvore, &k, &tamArvore);
+    salvarArvorePreOrdem(arvore, bytesArvore, &tamArvore);
 
     long int tamCodificado;
     arquivoCodificado = codificarArquivo(tabela, listaBytes, tam_arquivo, &tamCodificado);

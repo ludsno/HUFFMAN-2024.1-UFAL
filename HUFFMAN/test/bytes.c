@@ -34,7 +34,7 @@ char **alocarMapa(int colunas)
     char **tabela;
     tabela = malloc(256 * sizeof(char *));
     for (int i = 0; i < 256; i++)
-        tabela[i] = calloc(colunas, sizeof(char));
+        tabela[i] = calloc(colunas, sizeof(char));// t[]
     return tabela;
 }
 
@@ -68,7 +68,7 @@ unsigned long long int tamCodificado(char **tabela, unsigned char *listaBytes, l
 {
     unsigned long long int tam_codificado = 0;
     for (int i = 0; i != tamListaBytes; i++)
-        tam_codificado += strlen(tabela[listaBytes[i]]);
+        tam_codificado += strlen(tabela[listaBytes[i]]);// 3+2
     return tam_codificado + 1;
 }
 
@@ -153,5 +153,5 @@ int salvarCompactado(long int tamCodificado, unsigned char bytesArvore[], char *
         fwrite(&byte, sizeof(unsigned char), 1, f);
 
     fclose(f);
-    return 1;
+    return 0;
 }

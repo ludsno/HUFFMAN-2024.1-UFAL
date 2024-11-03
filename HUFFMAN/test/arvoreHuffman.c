@@ -57,7 +57,7 @@ int height(Node *arvore)
         return 1 + max(height(arvore->left), height(arvore->right));
 }
 
-void salvarArvorePreOrdem(Node *arvore, unsigned char arr[], int *i, int *tamArvore)
+void salvarArvorePreOrdem(Node *arvore, unsigned char arr[], int *tamArvore)
 {
     if (!isEmptyList(arvore))
     {
@@ -66,19 +66,19 @@ void salvarArvorePreOrdem(Node *arvore, unsigned char arr[], int *i, int *tamArv
         {
             if (c == '*' || c == '\\')
             {
-                arr[*i] = '\\';
-                (*i)++;
+                arr[*tamArvore] = '\\';
+                
                 (*tamArvore)++;
             }
-            arr[*i] = c;
+            arr[*tamArvore] = c;
         }
         else
-            arr[*i] = '*';
+            arr[*tamArvore] = '*';
 
-        (*i)++;
         (*tamArvore)++;
-        salvarArvorePreOrdem(arvore->left, arr, i, tamArvore);
-        salvarArvorePreOrdem(arvore->right, arr, i, tamArvore);
+
+        salvarArvorePreOrdem(arvore->left, arr, tamArvore);
+        salvarArvorePreOrdem(arvore->right, arr, tamArvore);
     }
 }
 
@@ -110,6 +110,7 @@ Node *refazerArvore(unsigned char str[], int n, int *i, Node *arvore)
             arvore->item = item;
             arvore->left = NULL;
             arvore->right = NULL;
+            arvore->next = NULL;
             arvore->left = refazerArvore(str, n, i, arvore->left);
             arvore->right = refazerArvore(str, n, i, arvore->right);
         }
@@ -125,6 +126,7 @@ Node *refazerArvore(unsigned char str[], int n, int *i, Node *arvore)
             arvore->item = item;
             arvore->left = NULL;
             arvore->right = NULL;
+            arvore->next = NULL;
         }
     }
     return arvore;
